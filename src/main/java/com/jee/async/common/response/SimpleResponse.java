@@ -1,7 +1,6 @@
 package com.jee.async.common.response;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +10,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.jee.async.common.enums.IBusinessResponse;
 import com.jee.async.common.enums.ResponseCode;
 import com.jee.async.common.exception.BusinessException;
+import com.jee.async.common.model.User;
 
 public class SimpleResponse<T> extends RtnSuper implements Serializable{
 
@@ -18,18 +18,19 @@ public class SimpleResponse<T> extends RtnSuper implements Serializable{
 	
 	private static final long serialVersionUID = -5479905266283048694L;
 	
-	@JSONField(name ="result" , ordinal = 5)
-	private T r;
+	@JSONField( ordinal = 5)
+	private T result;
    
-    public T getR() {
-        return r;
+    public T getResult() {
+        return result;
     }
-    public void setR(T r) {
-    	this.r = r ;
+    
+    public void setResult(T result) {
+    	this.result = result ;
     }
    
-    public SimpleResponse<T> result(T r) {
-    	this.r = r ;
+    public SimpleResponse<T> result(T result) {
+    	this.result = result ;
     	return this ;
     }
     
@@ -102,9 +103,19 @@ public class SimpleResponse<T> extends RtnSuper implements Serializable{
    	
    	public  SimpleResponse<T> failure(BusinessException ex){
        	this.setRtnCode(ex.getErrorCode().getCode());
-        this.setRtnMsg(new String[]{ex.getMessage()});
+       	if(StringUtils.isBlank(ex.getMessage())){
+       		this.setRtnMsg(new String[]{ex.getErrorCode().getMsg()});
+       	}else{
+       		this.setRtnMsg(new String[]{ex.getMessage()});
+       	}
        	return this ;
     }	
+   	public	SimpleResponse<T> success(User user){
+    	return failure(ResponseCode.SUCCESS_0).hash(user.getHash()).session(user.getSessionid()) ;
+    }
+    public	SimpleResponse<T> failure(User user){
+    	return failure(ResponseCode.FAILUER_1).hash(user.getHash()).session(user.getSessionid()) ;
+    }
    	
    	
    	/**
@@ -114,22 +125,26 @@ public class SimpleResponse<T> extends RtnSuper implements Serializable{
 		super.setHash(hash);
 		return this ;
 	}
-	public SimpleResponse<T> token(String token){
-		super.setToken(token);
+	public SimpleResponse<T> session(String token){
+		super.setSessionid(token);
 		return this ;
 	}
+	
+	
+	
 	/**
 	 * Async异常 
 	 */
 	public  SimpleResponse<T>  exception(Throwable ex , String hash , String... defaultMsg ){
-		logger.error(ex.getMessage() , ex);
 		Throwable cause = ex.getCause();
-		logger.error(cause.getMessage() , cause);
 		if (cause instanceof BusinessException) {
 			BusinessException be = (BusinessException) cause;
+			logger.error(" Catch BusinessException and Return ErrorCode: {} , ErrorMsg: {} " , be.getErrorCode().getCode() , be.getMessage());
 			this.failure(be) ;
 			this.setHash(hash);
 		} else {
+			logger.error(ex.getMessage() , ex);
+			//logger.error(cause.getMessage() , cause);
 			if(defaultMsg == null || defaultMsg.length == 0){
 				defaultMsg = new String[]{"系统异常::未知原因"} ;
 			}
@@ -145,18 +160,6 @@ public class SimpleResponse<T> extends RtnSuper implements Serializable{
 		return exception(ex , null , defaultMsg ) ;
 	}
 	
-	@Override
-	public String toString() {
-		return "SimpleResponse [r=" + r + ", getToken()=" + getToken() + ", getHash()=" + getHash() + ", getRtnCode()="
-				+ getRtnCode() + ", getRtnMsg()=" + Arrays.toString(getRtnMsg()) + ", getClass()=" + getClass()
-				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
-	}
-	
-	
-	
-	
-	
-
 	
 	
    

@@ -25,6 +25,7 @@ public class Constants {
 	
 	public static final String REQUEST_HASH = "hash" ;
 	
+	public static final String REQUEST_ERROR = "error" ;
 	
 	public static final List<String> sensitives = Arrays.asList(  //敏感字段过滤规则
 			"password" , "pwd" , "secret" , "u-keys"

@@ -11,6 +11,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.jee.async.common.enums.IBusinessResponse;
 import com.jee.async.common.enums.ResponseCode;
 import com.jee.async.common.exception.BusinessException;
+import com.jee.async.common.model.User;
 
 public class PageResponse<T> extends RtnSuper implements Serializable{
 
@@ -53,8 +54,8 @@ public class PageResponse<T> extends RtnSuper implements Serializable{
 		super.setHash(hash);
 		return this ;
 	}
-	public PageResponse<T> token(String token){
-		super.setToken(token);
+	public PageResponse<T> session(String token){
+		super.setSessionid(token);
 		return this ;
 	}
     
@@ -156,7 +157,11 @@ public class PageResponse<T> extends RtnSuper implements Serializable{
      */
 	public  PageResponse<T> failure(BusinessException ex){
 		this.setRtnCode(ex.getErrorCode().getCode());
-        this.setRtnMsg(new String[]{ex.getMessage()});
+       	if(StringUtils.isBlank(ex.getMessage())){
+       		this.setRtnMsg(new String[]{ex.getErrorCode().getMsg()});
+       	}else{
+       		this.setRtnMsg(new String[]{ex.getMessage()});
+       	}
        	return this ;
     }
 	public PageResponse<T> failure(IBusinessResponse code){
@@ -189,20 +194,26 @@ public class PageResponse<T> extends RtnSuper implements Serializable{
     	this.setRtnMsg(msg);
        	return this ;
    }
-   
+   public	PageResponse<T> success(User user){
+    	return failure(ResponseCode.SUCCESS_0).hash(user.getHash()).session(user.getSessionid()) ;
+   }
+   public	PageResponse<T> failure(User user){
+    	return failure(ResponseCode.FAILUER_1).hash(user.getHash()).session(user.getSessionid()) ;
+   }
    
    /**
 	 * Async异常 
 	 */
 	public  PageResponse<T>  exception(Throwable ex , String hash , String... defaultMsg ){
-		logger.error(ex.getMessage() , ex);
 		Throwable cause = ex.getCause();
-		logger.error(cause.getMessage() , cause);
 		if (cause instanceof BusinessException) {
 			BusinessException be = (BusinessException) cause;
+			logger.error(" Catch BusinessException and Return ErrorCode: {} , ErrorMsg: {} " , be.getErrorCode().getCode() , be.getMessage());
+
 			this.failure(be) ;
 			this.setHash(hash);
 		} else {
+			logger.error(ex.getMessage() , ex);
 			if(defaultMsg == null || defaultMsg.length == 0){
 				defaultMsg = new String[]{"系统异常::未知原因"} ;
 			}

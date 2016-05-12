@@ -22,8 +22,8 @@ public class RtnSuper implements Serializable {
 	/**
 	 * 返回用户token/sessionid值 用户登录标示
 	 */
-	@JSONField(name="token" , ordinal = 2 )
-	private String token ;
+	@JSONField(name="sessionid" , ordinal = 2 )
+	private String sessionid ;
 	
 	/**
 	 * 防止CSRF攻击 重复提交的随机码
@@ -32,12 +32,13 @@ public class RtnSuper implements Serializable {
 	private String hash ;
 	
 
-    public String getToken() {
-		return token;
+    
+	public String getSessionid() {
+		return sessionid;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public void setSessionid(String sessionid) {
+		this.sessionid = sessionid;
 	}
 
 	public String getHash() {

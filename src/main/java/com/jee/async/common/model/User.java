@@ -1,34 +1,38 @@
 package com.jee.async.common.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Map;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.jee.async.common.session.SessionUtil;
 
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = 5321850310574368492L;
-	private String usercode ;
+	
 	/**key**/
 	private String userid ;
+	private String usercode ;
 	private Long id ;
 	private String username ;
 	private String nickName ;
 	private String loginIp ;
-	
 	@JSONField(name="pwd")
 	private String password = "******" ;
 	private List<String> roles ;
 	private List<String> permssions ;
 	
 	/**用户登录标示**/
-	private String token ;
+	private String sessionid ;
 	
 	/**CSRF 随机码**/
 	private String hash ;
+	
+	@JSONField(serialize = false)
+	private transient SessionUtil session ;
+	@JSONField(serialize = false)
+	private transient String prefixSession ;
 	
 	public User(){
 		
@@ -44,14 +48,13 @@ public class User implements Serializable {
 		this.username = name ;
 	}
 	
-	public String getToken() {
-		return token;
-	}
 
-	public void setToken(String token) {
-		this.token = token;
+	public String getSessionid() {
+		return sessionid;
 	}
-
+	public void setSessionid(String sessionid) {
+		this.sessionid = sessionid;
+	}
 	public String getHash() {
 		return hash;
 	}
@@ -118,6 +121,47 @@ public class User implements Serializable {
 
 	public void setUsercode(String usercode) {
 		this.usercode = usercode;
+	}
+	public String getPrefixSession() {
+		return prefixSession;
+	}
+	public void setPrefixSession(String prefixSession) {
+		this.prefixSession = prefixSession;
+	}
+	
+	
+	public SessionUtil getSession() {
+		return session;
+	}
+	
+	public void setSession(SessionUtil session) {
+		this.session = session;
+	}
+	
+	
+	@JSONField(serialize = false)
+	public  void setAttribute(String key , String value ){
+		session.setAttribute(prefixSession + sessionid, key , value);
+	}
+	@JSONField(serialize = false)
+	public  void setAttribute(Map<String , String> value ){
+		session.setAttribute(prefixSession + sessionid, value);
+	}
+	@JSONField(serialize = false)
+	public void setAttribute(String key , Object value){
+		session.setAttribute(prefixSession + sessionid, key , value);
+	}
+	@JSONField(serialize = false)
+	public String getAttribute(String key){
+		return session.getAttribute(prefixSession + sessionid, key) ;
+	}
+	@JSONField(serialize = false)
+	public Map<String ,String> getAll(){
+		return session.getAll(prefixSession + sessionid) ;
+	}
+	@JSONField(serialize = false)
+	public void removeAttribute(String key){
+		session.removeAttribute(prefixSession + sessionid, key);
 	}
 	
 }
