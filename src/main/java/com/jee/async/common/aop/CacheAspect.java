@@ -31,7 +31,7 @@ public class CacheAspect {
 	
 	private SessionUtil sessionUtil ;
     
-	@Around("@annotation(com.jee.async.common.Cacheable)")
+	@Around("@annotation(com.jee.async.common.annotation.Cacheable)")
 	public Object cache(ProceedingJoinPoint pjp ) {
 		 Object result = null ;
          try{
@@ -107,7 +107,7 @@ public class CacheAspect {
 	
 	
 	
-	@Around("@annotation(com.jee.async.common.Cacheable)")
+	@Around("@annotation(com.jee.async.common.annotation.CacheEvict)")
 	public Object cacheEvict(ProceedingJoinPoint pjp ) {
 		 Object result = null ;
      	 
@@ -146,7 +146,7 @@ public class CacheAspect {
         
 	}
 	
-	@Around("@annotation(com.jee.async.common.Cacheable)")
+	@Around("@annotation(com.jee.async.common.annotation.CacheEvicts)")
 	public Object cacheEvicts(ProceedingJoinPoint pjp ) {
 		 Object result = null ;
      	 
