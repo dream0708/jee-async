@@ -271,6 +271,48 @@
 		
 	</dependencies>
 
+    <repositories>  
+        <repository>  
+            <id>nexus</id>  
+            <name>nexus</name>  
+            <url>http://139.196.14.70:8081/nexus/content/groups/public/</url>  
+            <releases>  
+                <enabled>true</enabled>  
+            </releases>  
+            <snapshots>  
+                <enabled>true</enabled>  
+            </snapshots>  
+        </repository>  
+    </repositories>  
+    
+    <pluginRepositories>  
+        <pluginRepository>  
+            <id>nexus</id>  
+            <name>nexus</name>  
+            <url>http://139.196.14.70:8081/nexus/content/groups/public/</url>  
+            <releases>  
+                <enabled>true</enabled>  
+            </releases>  
+            <snapshots>  
+                <enabled>true</enabled>  
+            </snapshots>  
+        </pluginRepository>  
+    </pluginRepositories>  
+    
+    
+    <distributionManagement>  
+        <repository>  
+            <id>user-release</id>  
+            <name>User Project Release</name>  
+            <url>http://139.196.14.70:8081/nexus/content/repositories/releases/</url>  
+        </repository>  
+  
+        <snapshotRepository>  
+            <id>user-snapshots</id>  
+            <name>User Project SNAPSHOTS</name>  
+            <url>http://139.196.14.70:8081/nexus/content/repositories/snapshots/</url>  
+        </snapshotRepository>  
+    </distributionManagement> 
 	<build>
 	    <finalName>jee-async</finalName>
 		<plugins>
