@@ -4,7 +4,7 @@
 
   <groupId>com.jee</groupId>
   <artifactId>jee-async</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <name>jee-async</name>
@@ -12,7 +12,7 @@
 
   <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.version>4.2.4.RELEASE</spring.version>
+		<spring.version>4.2.5.RELEASE</spring.version>
 		<fastjson.verison>1.2.3</fastjson.verison>
 		<zbus.version>6.3.0-SNAPSHOT</zbus.version>
 		<servlet.version>3.1.0</servlet.version>
@@ -271,17 +271,18 @@
 		
 	</dependencies>
 
-    <repositories>  
+    
+     <repositories>  
         <repository>  
             <id>nexus</id>  
             <name>nexus</name>  
             <url>http://139.196.14.70:8081/nexus/content/groups/public/</url>  
-            <releases>  
+           <!--  <releases>  
                 <enabled>true</enabled>  
             </releases>  
             <snapshots>  
                 <enabled>true</enabled>  
-            </snapshots>  
+            </snapshots>  --> 
         </repository>  
     </repositories>  
     
@@ -290,15 +291,14 @@
             <id>nexus</id>  
             <name>nexus</name>  
             <url>http://139.196.14.70:8081/nexus/content/groups/public/</url>  
-            <releases>  
+           <!--  <releases>  
                 <enabled>true</enabled>  
             </releases>  
             <snapshots>  
                 <enabled>true</enabled>  
-            </snapshots>  
+            </snapshots>  --> 
         </pluginRepository>  
-    </pluginRepositories>  
-    
+    </pluginRepositories>   
     
     <distributionManagement>  
         <repository>  
