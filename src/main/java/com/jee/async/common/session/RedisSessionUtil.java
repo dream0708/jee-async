@@ -10,12 +10,14 @@ import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jee.async.common.enums.ResponseCode;
 import com.jee.async.common.exception.BusinessException;
 import com.jee.async.common.model.User;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Transaction;
 import redis.clients.jedis.exceptions.JedisException;
 
 public class RedisSessionUtil implements SessionUtil {
@@ -69,7 +71,21 @@ public class RedisSessionUtil implements SessionUtil {
 			release(jedisPool, handler);
 		}
 	}
-	
+	public <T>  void  setObject(String key , T value , SerializerFeature ... sf) {
+		Jedis handler = null ;
+		try{
+			handler = jedisPool.getResource() ;
+		    handler.set(key, JSON.toJSONString(value , sf)) ;
+		}catch(JedisException ex){
+			logger.error(ex.getMessage() , ex);
+			throw new BusinessException(ResponseCode.SERVER_ERROR_500 , "session服务器发生异常") ;
+		}catch(Exception ex){
+			logger.error(ex.getMessage() , ex);
+			throw new BusinessException(ResponseCode.SERVER_ERROR_500 , "系统发生异常") ;
+		}finally{
+			release(jedisPool, handler);
+		}
+	}
 	public void expire(String key , int times){
 		Jedis handler = null ;
 		try{
@@ -434,6 +450,43 @@ public class RedisSessionUtil implements SessionUtil {
   			release(jedisPool, handler);
   		}
     }
+    public String sessionLock(String hash , String key , String field , String newHash ){
+    	Jedis handler = null ;
+  		try{
+  			handler = jedisPool.getResource() ;
+  			handler.watch(key) ;
+  			String sessionHash = handler.hget(key, field) ;
+  			if(StringUtils.isNotBlank(sessionHash) && sessionHash.equals(hash)){
+  				Transaction tx = handler.multi();
+  				handler.set(key, field , newHash) ;
+  				if(tx.exec() != null){
+  					return newHash ;
+  				}else{ //有被修改
+  					throw new BusinessException(ResponseCode.HASH_UNAUTHORIZED_632 , "HASH被修改") ;
+  				}
+  			}else{
+  				return null ;
+  			}
+  		}catch(BusinessException ex){
+  			throw ex ;
+  		}
+  		catch(JedisException ex){
+  			logger.error(ex.getMessage() , ex);
+  			throw new BusinessException(ResponseCode.SERVER_ERROR_500 , "session服务器发生异常") ;
+  		}catch(Exception ex){
+  			logger.error(ex.getMessage() , ex);
+  			throw new BusinessException(ResponseCode.SERVER_ERROR_500 , "系统发生异常") ;
+  		}finally{
+  			if(handler != null){
+  				handler.unwatch() ;
+  			}
+  			release(jedisPool, handler);
+  		}
+    }
+    
+    
+    
+    
 	private void release(JedisPool jedisPool , Jedis jedis){
 		if(null == jedis){
 			return ;

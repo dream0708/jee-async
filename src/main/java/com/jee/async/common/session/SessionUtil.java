@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.jee.async.common.model.User;
 
 
@@ -17,6 +18,7 @@ public interface SessionUtil {
 	public  void set(String key , String value) ;
 	
 	public <T>  void  setObject(String key , T value) ;
+	public <T>  void  setObject(String key , T value , SerializerFeature ... sf) ;
 	
 	public  void setex(String key , String value , int expires) ;
 	
@@ -42,7 +44,10 @@ public interface SessionUtil {
 	
 	public void delete(String key) ;
 	public void removeAttribute(String sessionid , String key) ;
-		
+    
+	
+	public String sessionLock(String hash , String key , String field , String newHash );
+	
     public void removeAttribute(User user , String key)  ;
     public Set<String> keys(String pattern) ;
     public Long ttl(String key);
