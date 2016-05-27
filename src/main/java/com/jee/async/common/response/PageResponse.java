@@ -118,15 +118,6 @@ public class PageResponse<T> extends RtnSuper implements Serializable{
 		return this ;
 	}
 
-	@SuppressWarnings("rawtypes")
-	public static void pageResultWrapper(PageResponse pageResult , int rtnCode , String[] msg)
-	{
-		if(pageResult == null)
-			pageResult = new PageResponse();
-		
-		pageResult.setRtnCode(rtnCode);
-		pageResult.setRtnMsg(msg);
-	}
 	
 	
 	 /**

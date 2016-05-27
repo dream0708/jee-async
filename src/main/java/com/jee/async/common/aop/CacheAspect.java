@@ -56,15 +56,20 @@ public class CacheAspect {
     		 
              //获取方法的返回类型,让缓存可以返回正确的类型
              Class<?> returnType = ((MethodSignature)pjp.getSignature()).getReturnType();
-             Type returnTypeG = method.getGenericReturnType();
+             
              if(returnType == Void.class || returnType == void.class){
             	 result = pjp.proceed() ;
       			 return result ;
              }
-             Type type = getGenericReturnType(returnType , returnTypeG) ;
+             Type genericType = method.getGenericReturnType();
+             
+             Type type = getGenericReturnType(returnType , genericType) ;
         	 result = sessionUtil.getObject(cacheable.prefix() + key ,  type ) ;
         	 if(null == result){
         		 result = pjp.proceed();
+        		 if(result == null){
+        			 return result ;
+        		 }
         		 if(returnType == CompletableFuture.class){
         			 CompletableFuture<?> cf = (CompletableFuture<?>)result ;
         			 return  cf.thenApply(data -> {
@@ -202,9 +207,11 @@ public class CacheAspect {
 		try {
 			method = pjp.getTarget().getClass().getMethod(pjp.getSignature().getName(), argTypes);
 		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage() , e);
 		} catch (SecurityException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage() , e);
+		} catch (Exception e){
+			logger.error(e.getMessage() , e);
 		}
 		return method;
         
@@ -262,7 +269,7 @@ public class CacheAspect {
         	return parser.parseExpression(key).getValue(context , String.class);
         }catch(Exception e){
         	logger.error(e.getMessage() , e);
-        	return null ;
+        	return key ;
         }
         
     }

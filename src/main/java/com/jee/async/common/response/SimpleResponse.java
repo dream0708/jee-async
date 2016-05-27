@@ -1,6 +1,10 @@
 package com.jee.async.common.response;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -19,30 +23,27 @@ public class SimpleResponse<T> extends RtnSuper implements Serializable{
 	private static final long serialVersionUID = -5479905266283048694L;
 	
 	@JSONField( ordinal = 5)
-	private T result;
+	private List<T> result;
    
-    public T getResult() {
-        return result;
-    }
-    
-    public void setResult(T result) {
-    	this.result = result ;
-    }
-   
-    public SimpleResponse<T> result(T result) {
-    	this.result = result ;
-    	return this ;
-    }
-    
-	@SuppressWarnings("rawtypes")
-	public static void simpleResultWrapper(SimpleResponse simpleResult , int rtnCode , String[] msg)
-	{
-		if(simpleResult == null)
-			simpleResult = new SimpleResponse();
-		simpleResult.setRtnCode(rtnCode);
-		simpleResult.setRtnMsg(msg);
+    public List<T> getResult() {
+	    return result;
+	}
+	public void setResult(List<T> result) {
+		this.result = result;
 	}
 	
+	public SimpleResponse<T> result(T data){
+		this.result = new LinkedList<T>();
+		result.add(data);
+		return this ;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public SimpleResponse<T> result(Collections data){
+		this.result = new LinkedList<T>();
+		result.addAll((Collection<? extends T>) data);
+		return this ;
+	}
 	 /**
      * 成功
      * @return
