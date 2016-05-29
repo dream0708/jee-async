@@ -2,7 +2,6 @@ package com.jee.async.common.response;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,16 +31,21 @@ public class SimpleResponse<T> extends RtnSuper implements Serializable{
 		this.result = result;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public SimpleResponse<T> result(T data){
+		
+		if(data instanceof Collection){
+			this.result = new LinkedList<T>((Collection<? extends T>)data);
+			return this ;
+		}
 		this.result = new LinkedList<T>();
 		result.add(data);
 		return this ;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public SimpleResponse<T> result(Collections data){
-		this.result = new LinkedList<T>();
-		result.addAll((Collection<? extends T>) data);
+	public SimpleResponse<T> result(Collection<T> data){
+		this.result = new LinkedList<T>(data);
 		return this ;
 	}
 	 /**
