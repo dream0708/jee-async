@@ -7,18 +7,19 @@ public class RegularUtil {
 
 	 //http://blog.chinaunix.net/uid-20577907-id-1758770.html
 	
-	 public static String mobileReg = "^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$" ;
-	 public static  String emailReg = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
+	 public static final String allReg = "[\\w\\W]*" ;
+	 public static final String mobileReg = "^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$" ;
+	 public static final String emailReg = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
 	 
-	 public static String complexPwdReg = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%_]).{6,20})" ;
-	 public static String simplePwdReg = "[0-9a-zA-Z_]{6,16}" ;
-	 public static String webReg = "^http://([w-]+.)+[w-]+(/[w-./?%&=]*)?$" ;
-	 public static String cerReg = "(\\d{15})|(\\d{14}[xX])|(\\d{18})|(\\d{17}[xX])" ;
-	 public static String chReg = "[\u4e00-\u9fa5]{0,}" ;
-	 public static String ipReg = "[1-9](\\d{1,2})?\\.(0|([1-9](\\d{1,2})?))\\.(0|([1-9](\\d{1,2})?))\\.(0|([1-9](\\d{1,2})?))";
-	 public static String urlReg = "(https?://(w{3}\\.)?)?\\w+\\.\\w+(\\.[a-zA-Z]+)*(:\\d{1,5})?(/\\w*)*(\\??(.+=.*)?(&.+=.*)?)?" ;
-	 public static String doubleCodeReg = "[^\\x00-\\xff]" ; //双字节;
-	 public static String negetiveReg = "^-[1-9]\\d*$" ;
+	 public static final String complexPwdReg = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%_]).{6,20})" ;
+	 public static final String simplePwdReg = "[0-9a-zA-Z_]{6,16}" ;
+	 public static final String webReg = "^http://([w-]+.)+[w-]+(/[w-./?%&=]*)?$" ;
+	 public static final String cerReg = "(\\d{15})|(\\d{14}[xX])|(\\d{18})|(\\d{17}[xX])" ;
+	 public static final String chReg = "[\u4e00-\u9fa5]{0,}" ;
+	 public static final String ipReg = "[1-9](\\d{1,2})?\\.(0|([1-9](\\d{1,2})?))\\.(0|([1-9](\\d{1,2})?))\\.(0|([1-9](\\d{1,2})?))";
+	 public static final String urlReg = "(https?://(w{3}\\.)?)?\\w+\\.\\w+(\\.[a-zA-Z]+)*(:\\d{1,5})?(/\\w*)*(\\??(.+=.*)?(&.+=.*)?)?" ;
+	 public static final String doubleCodeReg = "[^\\x00-\\xff]" ; //双字节;
+	 public static final String negetiveReg = "^-[1-9]\\d*$" ;
 	 
 	 /**
 	 匹配特定数字：
@@ -54,7 +55,8 @@ public class RegularUtil {
 	 }
 	 
 	 public static void main(String args[]){
-		 System.out.println(checkLegal("" , mobileReg));
+		 System.out.println(checkLegal("和26个英文字母组成的"
+		 		+ "  字符串" , allReg));
 	 }
 
 }
