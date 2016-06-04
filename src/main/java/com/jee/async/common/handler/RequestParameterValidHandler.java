@@ -24,12 +24,10 @@ public class RequestParameterValidHandler implements HandlerMethodArgumentResolv
 	@Override
 	public boolean supportsParameter(MethodParameter parameter) {
 		Class<?> type = parameter.getParameterType() ;
-		return  
-				(parameter.hasParameterAnnotation(RequestParam.class) ||
+		return  parameter.hasParameterAnnotation(RequestParam.class) ||
 				parameter.hasParameterAnnotation(NotBlank.class) ||
 				parameter.hasParameterAnnotation(Pattern.class) ||
-				parameter.hasParameterAnnotation(Length.class)) &&
-				(type.isPrimitive() || type == String.class || type == Number.class );
+				parameter.hasParameterAnnotation(Length.class) ;
 	}
 
 	@Override
@@ -37,7 +35,8 @@ public class RequestParameterValidHandler implements HandlerMethodArgumentResolv
 			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
 		Class<?> type = parameter.getParameterType() ;
 		RequestParam rp = parameter.getParameterAnnotation(RequestParam.class) ;
-		String name = parameter.getParameterName() ; 
+		String name = parameter.getParameterName() ;
+		
 		String defaultValue = null ;
 		if(rp != null){
 			name = rp.name() ;
@@ -110,6 +109,7 @@ public class RequestParameterValidHandler implements HandlerMethodArgumentResolv
 		}catch(BusinessException ex){
 			throw ex ;
 		}catch(Exception ex){
+			ex.printStackTrace();
 			logger.error(ex.getMessage() , ex);
 			throw new BusinessException(ResponseCode.ILLEGAL_PARAM_411 , name + "参数错误!") ;
 		}
